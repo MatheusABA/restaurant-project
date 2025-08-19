@@ -19,8 +19,10 @@ server/
   repository/           // DB access logic (optional, for abstraction)
     table_repository.go
     order_repository.go
-  middlewares/          // Custom Gin middlewares (auth, logging, etc.)
+  middleware/          // Custom Gin middlewares (auth, logging, etc.)
     auth.go
+    admin.go
+    requestLogger.go
   utils/                // Utility functions/helpers
     response.go
     logger.go
