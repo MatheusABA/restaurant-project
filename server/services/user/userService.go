@@ -68,3 +68,7 @@ func FindUserById(id uint) (*model.User, error) {
 func FindUserByEmail(email string) (*model.User, error) {
 	return repositories.FindUserByEmail(email)
 }
+
+func FindAllUsers() ([]model.User, error) {
+	return repositories.FindAllUsers()
+}

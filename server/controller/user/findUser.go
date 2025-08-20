@@ -41,3 +41,12 @@ func FindUserByEmail(c *gin.Context) {
 
 	utils.Success(c, 200, user)
 }
+
+func FindAllUsers(c *gin.Context) {
+	users, err := services.FindAllUsers()
+	if err != nil {
+		utils.Error(c, 500, "Error while searching users")
+		return
+	}
+	utils.Success(c, 200, users)
+}

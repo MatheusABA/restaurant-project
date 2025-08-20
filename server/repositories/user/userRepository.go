@@ -28,3 +28,9 @@ func FindUserByEmail(email string) (*model.User, error) {
 func UpdateUser(user *model.User) error {
 	return database.DB.Save(user).Error
 }
+
+func FindAllUsers() ([]model.User, error) {
+	var users []model.User
+	err := database.DB.Where("is_active = ?", true).Find(&users).Error
+	return users, err
+}

@@ -13,21 +13,3 @@ func InitLogger() {
 		FullTimestamp: true,
 	})
 }
-
-func LogInfo(msg string, fields ...any) {
-	Logger.WithFields(logrus.Fields{
-		"extra": fields,
-	}).Info(msg)
-}
-
-func LogWarning(msg string, fields ...any) {
-	Logger.WithFields(logrus.Fields{
-		"extra": fields,
-	}).Warn(msg)
-}
-
-func LogError(msg string, fields ...any) {
-	Logger.WithFields(logrus.Fields{
-		"extra": fields,
-	}).Error(msg)
-}

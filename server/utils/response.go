@@ -12,9 +12,7 @@ func (error *AppError) Error() string {
 }
 
 func Success(c *gin.Context, status int, data any) {
-	c.JSON(status, gin.H{
-		"data": data,
-	})
+	c.JSON(status, data)
 }
 
 func Error(c *gin.Context, status int, message string) {

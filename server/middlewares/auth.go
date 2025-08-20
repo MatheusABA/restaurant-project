@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/MatheusABA/restaurant-project/server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -13,7 +14,8 @@ func AuthJWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing or invalid Authorization header"})
+			utils.Logger.Warn("Missing or invalid Authorization header")
+			utils.Error(c, http.StatusUnauthorized, "Invalid or expired token")
 			c.Abort()
 			return
 		}
@@ -26,19 +28,21 @@ func AuthJWT() gin.HandlerFunc {
 		})
 
 		if err != nil || !token.Valid {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
+			utils.Logger.Warn("Invalid or expired token")
+			utils.Error(c, http.StatusUnauthorized, "Invalid or expired token")
 			c.Abort()
 			return
 		}
 
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token claims"})
+			utils.Logger.Warn("Invalid token claims")
+			utils.Error(c, http.StatusUnauthorized, "Invalid or expired token")
 			c.Abort()
 			return
 		}
 
-		// Add user data to context
+		// Adding user data to context
 		c.Set("user_id", claims["user_id"])
 		c.Set("role", claims["role"])
 

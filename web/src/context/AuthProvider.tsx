@@ -1,0 +1,71 @@
+import { useEffect, useState, type ReactNode } from "react";
+import { AuthContext } from "./AuthContext";
+import AuthService from "../api/authService";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode"
+
+type DecodedToken = {
+  exp: number;
+  role?: string;
+  user_id?: number;
+};
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [token, setToken] = useState<string>(localStorage.getItem("token") || "");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      AuthService.validateToken(token)
+        .then((valid) => {
+          if (!valid) {
+            setToken("");
+            localStorage.removeItem("token");
+            navigate("/login");
+            return;
+          }
+          try {
+            const decodedToken = jwtDecode(token) as DecodedToken;
+            const now = Math.floor(Date.now() / 1000);
+            if (decodedToken.exp < now) {
+              setToken("");
+              localStorage.removeItem("token");
+              navigate("/login");
+              return;
+            }
+            if (decodedToken.role !== "admin") {
+              setToken("");
+              localStorage.removeItem("token");
+              navigate("/login");
+            } 
+          } catch {
+            setToken("");
+            localStorage.removeItem("token");
+            navigate("/login");
+          }
+        })
+        .catch(() => {
+          setToken("");
+          localStorage.removeItem("token");
+          navigate("/login");
+        });
+    }
+  }, [token, navigate]);
+
+  useEffect(() => {
+    if (token) localStorage.setItem("token", token);
+    else localStorage.removeItem("token");
+  }, [token]);
+
+  const login = (newToken: string) => setToken(newToken);
+  const logout = () => {
+    setToken("");
+    navigate("/login");
+  };
+
+  return (
+    <AuthContext.Provider value={{ token, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
