@@ -13,11 +13,16 @@ func RequestLogger() gin.HandlerFunc {
 		path := c.Request.URL.Path
 		method := c.Request.Method
 
-		c.Next() // Process request
+		c.Next() // Processa a requisição
 
 		status := c.Writer.Status()
 		latency := time.Since(start)
 
-		utils.LogInfo(method, path, status, latency)
+		utils.Logger.WithFields(map[string]any{
+			"method":  method,
+			"path":    path,
+			"status":  status,
+			"latency": latency,
+		}).Info("Request handled")
 	}
 }

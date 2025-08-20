@@ -17,18 +17,23 @@ func InitRoutes(r *gin.RouterGroup) {
 		userGroup.GET(
 			"/getUserById/:id",
 			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			middleware.RequireAdmin(),
 			user.FindUserById,
 		)
 
 		userGroup.GET(
 			"getUserByEmail/:email",
 			middleware.RequestLogger(),
+			middleware.RateLimiter(),
 			user.FindUserByEmail,
 		)
 
 		userGroup.POST(
 			"/createUser",
 			middleware.RequestLogger(),
+			middleware.RateLimiter(),
 			user.CreateUser,
 		)
 
@@ -39,6 +44,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		authGroup.POST(
 			"/login",
 			middleware.RequestLogger(),
+			middleware.RateLimiter(),
 			auth.Login,
 		)
 	}
