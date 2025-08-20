@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/MatheusABA/restaurant-project/server/config"
+	"github.com/MatheusABA/restaurant-project/server/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -24,4 +25,7 @@ func ConnectDatabase(config *config.Config) {
 	}
 	DB = database
 
+	if err := DB.AutoMigrate(&model.User{}); err != nil {
+		log.Fatalf("AutoMigrate failed: %v", err)
+	}
 }

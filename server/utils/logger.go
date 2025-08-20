@@ -1,12 +1,31 @@
 package utils
 
 import (
-	"log"
-	"os"
+	"go.uber.org/zap"
 )
 
 var (
-	InfoLogger  = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-	WarnLogger  = log.New(os.Stdout, "WARN: ", log.Ldate|log.Ltime|log.Lshortfile)
-	ErrorLogger = log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+	Logger *zap.Logger
+	Sugar  *zap.SugaredLogger
 )
+
+func InitLogger() {
+	var err error
+	Logger, err = zap.NewProduction()
+	if err != nil {
+		panic(err)
+	}
+	Sugar = Logger.Sugar()
+}
+
+func LogInfo(msg string, fields ...any) {
+	Sugar.Infow(msg, fields...)
+}
+
+func LogWarning(msg string, fields ...any) {
+	Sugar.Warnw(msg, fields...)
+}
+
+func LogError(msg string, fields ...any) {
+	Sugar.Errorw(msg, fields...)
+}
