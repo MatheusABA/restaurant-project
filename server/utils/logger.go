@@ -1,31 +1,33 @@
 package utils
 
 import (
-	"go.uber.org/zap"
+	"github.com/sirupsen/logrus"
 )
 
-var (
-	Logger *zap.Logger
-	Sugar  *zap.SugaredLogger
-)
+var Logger *logrus.Logger
 
 func InitLogger() {
-	var err error
-	Logger, err = zap.NewProduction()
-	if err != nil {
-		panic(err)
-	}
-	Sugar = Logger.Sugar()
+	Logger = logrus.New()
+	Logger.SetFormatter(&logrus.TextFormatter{
+		ForceColors:   true,
+		FullTimestamp: true,
+	})
 }
 
 func LogInfo(msg string, fields ...any) {
-	Sugar.Infow(msg, fields...)
+	Logger.WithFields(logrus.Fields{
+		"extra": fields,
+	}).Info(msg)
 }
 
 func LogWarning(msg string, fields ...any) {
-	Sugar.Warnw(msg, fields...)
+	Logger.WithFields(logrus.Fields{
+		"extra": fields,
+	}).Warn(msg)
 }
 
 func LogError(msg string, fields ...any) {
-	Sugar.Errorw(msg, fields...)
+	Logger.WithFields(logrus.Fields{
+		"extra": fields,
+	}).Error(msg)
 }

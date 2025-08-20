@@ -18,6 +18,6 @@ func RequestLogger() gin.HandlerFunc {
 		status := c.Writer.Status()
 		latency := time.Since(start)
 
-		utils.LogInfo("%s %s %d %s", method, path, status, latency)
+		utils.LogInfo(method, path, status, latency)
 	}
 }

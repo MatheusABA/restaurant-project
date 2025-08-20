@@ -2,13 +2,13 @@ package user
 
 import (
 	"github.com/MatheusABA/restaurant-project/server/controller/user/dto"
-	"github.com/MatheusABA/restaurant-project/server/services"
+	services "github.com/MatheusABA/restaurant-project/server/services/user"
 	"github.com/MatheusABA/restaurant-project/server/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func CreateUser(c *gin.Context) {
-	var userRequest dto.UserRequest
+	var userRequest dto.CreateUserRequest
 
 	if err := c.ShouldBindJSON(&userRequest); err != nil {
 		utils.Error(c, 400, "Invalid request body")
