@@ -2,8 +2,9 @@ package routes
 
 import (
 	"github.com/MatheusABA/restaurant-project/server/controller/auth"
+	"github.com/MatheusABA/restaurant-project/server/controller/invoicing"
 	"github.com/MatheusABA/restaurant-project/server/controller/order"
-	table "github.com/MatheusABA/restaurant-project/server/controller/tables"
+	"github.com/MatheusABA/restaurant-project/server/controller/tables"
 	"github.com/MatheusABA/restaurant-project/server/controller/user"
 	middleware "github.com/MatheusABA/restaurant-project/server/middlewares"
 	"github.com/gin-gonic/gin"
@@ -173,7 +174,19 @@ func InitRoutes(r *gin.RouterGroup) {
 			middleware.RateLimiter(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
-			table.GetAllTables,
+			tables.GetAllTables,
+		)
+	}
+
+	invoiceGroup := r.Group("/invoice")
+	{
+		invoiceGroup.GET(
+			"/getAllInvoices",
+			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			middleware.RequireAdmin(),
+			invoicing.GetAllInvoices,
 		)
 	}
 }

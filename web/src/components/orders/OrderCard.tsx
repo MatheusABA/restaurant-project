@@ -66,7 +66,7 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
   const { token } = useContext(AuthContext);
 
   const handleCloseOrder = async () => {
-    if (!order.items || order.items.length) {
+    if (!order.items) {
       window.alert("A comanda está vazia, adicione items para poder fechâ-la!");
       return;
     }

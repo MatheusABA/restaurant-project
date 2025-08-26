@@ -50,15 +50,33 @@ func UpdateOrderStatus(id uint) error {
 		Updates(updates).Error; err != nil {
 		return err
 	}
-	// Busca a comanda para pegar a mesa
+	// Busca a comanda para pegar a mesa e os itens
 	var order model.Order
-	if err := database.DB.Where("id = ?", id).First(&order).Error; err != nil {
+	if err := database.DB.Preload("Items").Where("id = ?", id).First(&order).Error; err != nil {
 		return err
 	}
 	// Libera a mesa
-	return database.DB.Model(&model.Table{}).
+	if err := database.DB.Model(&model.Table{}).
 		Where("id = ?", order.TableID).
-		Update("status", "disponivel").Error
+		Update("status", "disponivel").Error; err != nil {
+		return err
+	}
+	// Calcula o total dos itens
+	total := 0
+	for _, item := range order.Items {
+		total += item.Price * item.Quantity
+	}
+	// Cria registro financeiro
+	finance := model.Invoicing{
+		OrderID:   order.ID,
+		TableID:   order.TableID,
+		Total:     total,
+		CreatedAt: time.Now(),
+	}
+	if err := database.DB.Create(&finance).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func AddOrderItem(item model.OrderItem) error {

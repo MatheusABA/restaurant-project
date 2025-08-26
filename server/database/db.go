@@ -26,7 +26,11 @@ func ConnectDatabase(config *config.Config) {
 	DB = database
 
 	if err := DB.AutoMigrate(
-		&model.User{}, &model.Order{}, &model.OrderItem{}, &model.Table{},
+		&model.User{},
+		&model.Order{},
+		&model.OrderItem{},
+		&model.Table{},
+		&model.Invoicing{},
 	); err != nil {
 		log.Fatalf("AutoMigrate failed: %v", err)
 	}

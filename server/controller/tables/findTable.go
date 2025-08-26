@@ -1,4 +1,4 @@
-package table
+package tables
 
 import (
 	"github.com/MatheusABA/restaurant-project/server/database"
