@@ -26,3 +26,7 @@ type AddOrderItemRequest struct {
 	Price    int    `json:"price" `
 	Quantity int    `json:"quantity"`
 }
+
+type DeleteOrderRequest struct {
+	ID uint `uri:"id" binding:"required"`
+}

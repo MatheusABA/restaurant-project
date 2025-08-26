@@ -44,3 +44,7 @@ func AddOrderItem(req dto.AddOrderItemRequest) error {
 	}
 	return repositories.AddOrderItem(orderItem)
 }
+
+func DeleteOrder(req dto.DeleteOrderRequest) error {
+	return repositories.DeleteOrder(req.ID)
+}

@@ -3,6 +3,7 @@ import { AuthContext } from "./AuthContext";
 import AuthService from "../api/authService";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode"
+import userService from "../api/userService";
 
 type DecodedToken = {
   exp: number;
@@ -12,6 +13,7 @@ type DecodedToken = {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string>(localStorage.getItem("token") || "");
+  const [user, setUser] = useState<{ id: number; name: string; email: string; role: string } | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,6 +40,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               localStorage.removeItem("token");
               navigate("/login");
             } 
+            if (decodedToken.user_id) {
+              userService.getUserById(token, decodedToken.user_id)
+                .then(setUser)
+                .catch(() => setUser(null))
+            }
           } catch {
             setToken("");
             localStorage.removeItem("token");
@@ -60,11 +67,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = (newToken: string) => setToken(newToken);
   const logout = () => {
     setToken("");
+    setUser(null);
     navigate("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ token, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

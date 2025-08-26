@@ -154,6 +154,15 @@ func InitRoutes(r *gin.RouterGroup) {
 			middleware.AuthJWT(),
 			order.AddOrderItem,
 		)
+
+		orderGroup.PATCH(
+			"/deleteOrder/:id",
+			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			middleware.RequireAdmin(),
+			order.DeleteOrder,
+		)
 	}
 
 	tableGroup := r.Group("/table")

@@ -64,3 +64,22 @@ func UpdateOrderStatus(id uint) error {
 func AddOrderItem(item model.OrderItem) error {
 	return database.DB.Create(&item).Error
 }
+
+func DeleteOrder(id uint) error {
+	updates := map[string]any{
+		"status": "cancelled",
+	}
+	if err := database.DB.Model(&model.Order{}).
+		Where("id = ?", id).
+		Updates(updates).Error; err != nil {
+		return err
+	}
+	// Libera a mesa
+	var order model.Order
+	if err := database.DB.Where("id = ?", id).First(&order).Error; err != nil {
+		return err
+	}
+	return database.DB.Model(&model.Table{}).
+		Where("id = ?", order.TableID).
+		Update("status", "disponivel").Error
+}

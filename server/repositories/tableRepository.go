@@ -7,6 +7,6 @@ import (
 
 func GetAllTables() ([]model.Table, error) {
 	var tables []model.Table
-	err := database.DB.Find(&tables).Error
+	err := database.DB.Order("number ASC").Find(&tables).Error
 	return tables, err
 }

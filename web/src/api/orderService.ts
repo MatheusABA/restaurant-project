@@ -7,6 +7,7 @@ interface OrderItem {
 }
 
 class OrderService {
+
   async getAllOrders(token: string) {
     const response = await api.get("/order/getAllOrders", {
       headers: { Authorization: `Bearer ${token}` },
@@ -18,6 +19,16 @@ class OrderService {
     const response = await api.get(`/order/getOrderById/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    return response.data;
+  }
+
+  async getAllTables(token: string) {
+    const response = await api.get("/table/getAllTables", {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      },
+    })
+    console.log(JSON.stringify(response.data, null, 2))
     return response.data;
   }
 
@@ -41,6 +52,36 @@ class OrderService {
       });
     return response.data;
   }
+
+  async createOrder(token: string, table_id: number, items: OrderItem[] = []) {
+    const response = await api.post(`/order/createOrder`,
+      {
+        table_id,
+        items,
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      },
+    ) 
+
+    return response.data;
+  }
+
+  async discardOrder(token: string, id: number) {
+    const response = await api.patch(`/order/deleteOrder/${id}`,
+      {},
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    )
+
+    return response.data
+  }
+
 }
 
 export default new OrderService();

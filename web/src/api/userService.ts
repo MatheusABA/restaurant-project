@@ -17,6 +17,18 @@ class UserService {
     return response.data;
   }
 
+  async getUserById(token: string, id: number) {
+    const response = await api.get(`/user/getUserById/${id}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+
+    return response.data;
+  }
+
   async createUser(token: string, data: UserData) {
     const response = await api.post("/user/createUser", data, {
       headers: {

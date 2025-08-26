@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import orderService from "../../api/orderService";
 import { AuthContext } from "../../context/AuthContext";
+import { FaTrash } from "react-icons/fa"; // Instale react-icons se não tiver
 
 interface User {
   id: number;
@@ -35,7 +36,6 @@ interface Order {
   items: OrderItem[];
 }
 
-
 interface Props {
   order: Order;
   onRefresh?: () => void;
@@ -66,6 +66,10 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
   const { token } = useContext(AuthContext);
 
   const handleCloseOrder = async () => {
+    if (!order.items || order.items.length) {
+      window.alert("A comanda está vazia, adicione items para poder fechâ-la!");
+      return;
+    }
     if (!window.confirm("Deseja realmente fechar esta comanda?")) return;
     setLoading(true);
     try {
@@ -100,6 +104,19 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
     setLoading(false);
   };
 
+  const handleDiscardOrder = async () => {
+    if (!window.confirm("Deseja descartar esta comanda?")) return;
+    setLoading(true);
+    try {
+      await orderService.discardOrder(token, order.id);
+      alert("Comanda descartada!");
+      if (onRefresh) onRefresh();
+    } catch {
+      alert("Erro ao descartar comanda.");
+    }
+    setLoading(false);
+  };
+
   return (
     <div
       style={{
@@ -111,7 +128,30 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
         position: "relative",
       }}
     >
-      <h4 style={{ fontFamily: "Poppins", fontSize: 15 }}>Mesa {order.table?.number ?? ''}</h4>
+      {order.status === "open" && (
+        <button
+          onClick={handleDiscardOrder}
+          disabled={loading}
+          style={{
+            position: "absolute",
+            top: 10,
+            right: 10,
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            color: "#de4b40",
+            fontSize: 20,
+            zIndex: 2,
+          }}
+          title="Descartar comanda"
+        >
+          <FaTrash />
+        </button>
+      )}
+
+      <h4 style={{ fontFamily: "Poppins", fontSize: 15 }}>
+        Mesa {order.table?.number ?? ""}
+      </h4>
       <div>
         <b style={{ fontFamily: "Poppins", fontSize: 12 }}>Responsável:</b>{" "}
         {order.user.name}
@@ -124,7 +164,7 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
         <b style={{ fontFamily: "Poppins", fontSize: 12 }}>Itens:</b>
       </div>
       <ul>
-        {order.items.map((item) => (
+        {order.items?.map((item) => (
           <li key={item.id} style={{ fontFamily: "Poppins", fontSize: 14 }}>
             {item.name} - R$ {(item.price / 100).toFixed(2)} x {item.quantity}
           </li>
@@ -144,7 +184,7 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
               borderRadius: 4,
               cursor: "pointer",
               fontFamily: "Poppins",
-              fontSize: 14
+              fontSize: 14,
             }}
             onClick={handleCloseOrder}
             disabled={loading}
@@ -160,13 +200,29 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
               borderRadius: 4,
               cursor: "pointer",
               fontFamily: "Poppins",
-              fontSize: 14
+              fontSize: 14,
             }}
             onClick={() => setShowModal(true)}
             disabled={loading}
           >
             Adicionar item
           </button>
+          {/* <button
+            style={{
+              background: "#e67e22",
+              color: "#fff",
+              border: "none",
+              padding: "6px 12px",
+              borderRadius: 4,
+              cursor: "pointer",
+              fontFamily: "Poppins",
+              fontSize: 14
+            }}
+            onClick={handleDiscardOrder}
+            disabled={loading}
+          >
+            Descartar comanda
+          </button> */}
         </div>
       )}
       {showModal && (
@@ -204,7 +260,14 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
             </h3>
             <form onSubmit={handleAddItem}>
               <div style={{ marginBottom: 12 }}>
-                <label style={{ fontFamily: "Poppins", fontSize: 12, display: "block", marginBottom: 4 }}>
+                <label
+                  style={{
+                    fontFamily: "Poppins",
+                    fontSize: 12,
+                    display: "block",
+                    marginBottom: 4,
+                  }}
+                >
                   Nome do item
                 </label>
                 <input
@@ -218,10 +281,17 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
                     padding: 8,
                     marginBottom: 8,
                     fontFamily: "Poppins",
-                    fontSize: 12
+                    fontSize: 12,
                   }}
                 />
-                <label style={{ fontFamily: "Poppins", fontSize: 12, display: "block", marginBottom: 4 }}>
+                <label
+                  style={{
+                    fontFamily: "Poppins",
+                    fontSize: 12,
+                    display: "block",
+                    marginBottom: 4,
+                  }}
+                >
                   Preço
                 </label>
                 <input
@@ -237,7 +307,14 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
                     marginBottom: 8,
                   }}
                 />
-                <label style={{ fontFamily: "Poppins", fontSize: 12, display: "block", marginBottom: 4 }}>
+                <label
+                  style={{
+                    fontFamily: "Poppins",
+                    fontSize: 12,
+                    display: "block",
+                    marginBottom: 4,
+                  }}
+                >
                   Quantidade
                 </label>
                 <input
@@ -262,7 +339,7 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
                     borderRadius: 4,
                     cursor: "pointer",
                     fontFamily: "Poppins",
-                    fontSize: 14
+                    fontSize: 14,
                   }}
                 >
                   Inserir
@@ -278,7 +355,7 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
                     borderRadius: 4,
                     cursor: "pointer",
                     fontFamily: "Poppins",
-                    fontSize: 14
+                    fontSize: 14,
                   }}
                 >
                   Cancelar
