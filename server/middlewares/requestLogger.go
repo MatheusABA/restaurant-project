@@ -13,7 +13,7 @@ func RequestLogger() gin.HandlerFunc {
 		path := c.Request.URL.Path
 		method := c.Request.Method
 
-		c.Next() // Processa a requisição
+		c.Next()
 
 		status := c.Writer.Status()
 		latency := time.Since(start)

@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/MatheusABA/restaurant-project/server/controller/auth"
+	"github.com/MatheusABA/restaurant-project/server/controller/order"
 	"github.com/MatheusABA/restaurant-project/server/controller/user"
 	middleware "github.com/MatheusABA/restaurant-project/server/middlewares"
 	"github.com/gin-gonic/gin"
@@ -10,7 +11,7 @@ import (
 func InitRoutes(r *gin.RouterGroup) {
 
 	// Routes for user management
-	// Create, Update, Delete, Find by ID, Find by Email
+	// Create, Update, Delete, Find by ID, Find by Email, Find Archived
 	userGroup := r.Group("/user")
 	{
 		// Get user by Id
@@ -32,15 +33,6 @@ func InitRoutes(r *gin.RouterGroup) {
 			user.FindUserByEmail,
 		)
 
-		userGroup.POST(
-			"/createUser",
-			middleware.RequestLogger(),
-			middleware.RateLimiter(),
-			middleware.AuthJWT(),
-			middleware.RequireAdmin(),
-			user.CreateUser,
-		)
-
 		userGroup.GET(
 			"/getAllUsers",
 			middleware.RequestLogger(),
@@ -50,8 +42,54 @@ func InitRoutes(r *gin.RouterGroup) {
 			user.FindAllUsers,
 		)
 
+		userGroup.GET(
+			"/getArchivedUsers",
+			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			middleware.RequireAdmin(),
+			user.FindArchivedUsers,
+		)
+
+		userGroup.POST(
+			"/createUser",
+			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			middleware.RequireAdmin(),
+			user.CreateUser,
+		)
+
+		userGroup.PATCH(
+			"/updateUser/:id",
+			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			middleware.RequireAdmin(),
+			user.UpdateUser,
+		)
+
+		userGroup.PATCH(
+			"/deleteUser/:id",
+			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			middleware.RequireAdmin(),
+			user.DeleteUser,
+		)
+
+		userGroup.PATCH(
+			"/activateUser/:id",
+			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			middleware.RequireAdmin(),
+			user.ActivateUser,
+		)
+
 	}
 
+	// Login and token auth
 	authGroup := r.Group("/auth")
 	{
 		authGroup.POST(
@@ -67,6 +105,36 @@ func InitRoutes(r *gin.RouterGroup) {
 			middleware.RequestLogger(),
 			middleware.RateLimiter(),
 			auth.ValidateToken,
+		)
+	}
+
+	// Order routes
+	orderGroup := r.Group("/order")
+	{
+		orderGroup.POST(
+			"/createOrder",
+			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			order.CreateOrder,
+		)
+
+		orderGroup.GET(
+			"/getOrderById/:id",
+			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			middleware.RequireAdmin(),
+			order.GetOrderById,
+		)
+
+		orderGroup.GET(
+			"/getAllOrders",
+			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			middleware.RequireAdmin(),
+			order.GetAllOrders,
 		)
 	}
 }

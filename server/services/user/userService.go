@@ -1,11 +1,11 @@
-package services
+package user
 
 import (
 	"errors"
 
 	"github.com/MatheusABA/restaurant-project/server/controller/user/dto"
 	"github.com/MatheusABA/restaurant-project/server/model"
-	repositories "github.com/MatheusABA/restaurant-project/server/repositories/user"
+	"github.com/MatheusABA/restaurant-project/server/repositories/user"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -15,7 +15,7 @@ func CreateUser(req dto.CreateUserRequest) error {
 		return err
 	}
 
-	user := model.User{
+	userRequest := model.User{
 		Name:     req.Name,
 		Email:    req.Email,
 		Password: string(hashedPassword),
@@ -23,52 +23,62 @@ func CreateUser(req dto.CreateUserRequest) error {
 		IsActive: true,
 	}
 
-	return repositories.CreateUser(&user)
+	return user.CreateUser(&userRequest)
 }
 
 func UpdateUser(req dto.UpdateUserRequest) error {
-	user, err := repositories.FindUserById(req.ID)
-	if err != nil || user == nil {
+	userRequest, err := user.FindUserById(req.ID)
+	if err != nil || userRequest == nil {
 		return errors.New("user not found")
 	}
 
 	if req.Name != "" {
-		user.Name = req.Name
+		userRequest.Name = req.Name
 	}
 	if req.Email != "" {
-		user.Email = req.Email
+		userRequest.Email = req.Email
 	}
 	if req.Role != "" {
-		user.Role = req.Role
+		userRequest.Role = req.Role
 	}
 	if req.Password != "" {
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 		if err != nil {
 			return err
 		}
-		user.Password = string(hashedPassword)
+		userRequest.Password = string(hashedPassword)
 	}
 
-	return repositories.UpdateUser(user)
+	return user.UpdateUser(userRequest)
 }
 
+// Soft delete user
 func DeleteUser(id uint) error {
-	user, err := repositories.FindUserById(id)
-	if err != nil || user == nil {
+	userRequest, err := user.FindUserById(id)
+	if err != nil || userRequest == nil {
 		return errors.New("user not found")
 	}
-	user.IsActive = false // Soft delete
-	return repositories.UpdateUser(user)
+
+	return user.SoftDeleteUser(userRequest)
+}
+
+// Reactivate user
+func ActivateUser(id uint) error {
+	return user.ActivateUserById(id)
 }
 
 func FindUserById(id uint) (*model.User, error) {
-	return repositories.FindUserById(id)
+	return user.FindUserById(id)
 }
 
 func FindUserByEmail(email string) (*model.User, error) {
-	return repositories.FindUserByEmail(email)
+	return user.FindUserByEmail(email)
 }
 
 func FindAllUsers() ([]model.User, error) {
-	return repositories.FindAllUsers()
+	return user.FindAllUsers()
+}
+
+func FindArchivedUsers() ([]model.User, error) {
+	return user.FindArchivedUsers()
 }

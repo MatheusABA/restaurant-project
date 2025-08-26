@@ -26,3 +26,7 @@ type UpdateUserRequest struct {
 	Role     string `json:"role" binding:"omitempty,oneof=user admin"`
 	Password string `json:"password" binding:"omitempty,min=5,max=40"`
 }
+
+type ActivateUserRequest struct {
+	ID uint `uri:"id" binding:"required"`
+}

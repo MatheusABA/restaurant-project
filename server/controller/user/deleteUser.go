@@ -2,7 +2,7 @@ package user
 
 import (
 	"github.com/MatheusABA/restaurant-project/server/controller/user/dto"
-	services "github.com/MatheusABA/restaurant-project/server/services/user"
+	"github.com/MatheusABA/restaurant-project/server/services/user"
 	"github.com/MatheusABA/restaurant-project/server/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -15,7 +15,7 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	if err := services.DeleteUser(req.ID); err != nil {
+	if err := user.DeleteUser(req.ID); err != nil {
 		utils.Error(c, 400, err.Error())
 		return
 	}
