@@ -15,37 +15,41 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     setLoading(true);
     try {
       const token = await authService.login(email, password);
-      login(token);
+      if (token) {
+        login(token);
+      } else {
+        setTimeout(() => {
+          setError("Credenciais inválidas");
+          setLoading(false);
+        }, 1000);
+      }
     } catch {
-      setError("Credenciais inválidas");
-      setLoading(false);
+      setTimeout(() => {
+        setError("Credenciais inválidas");
+        setLoading(false);
+      }, 1000);
     }
   };
 
   useEffect(() => {
-    if (!token && loading) {
+    if (error) {
+      setSuccess("");
       setLoading(false);
-      setError("Erro ao fazer login. Verifique suas credenciais.");
-  
-      const timer = setTimeout(() => setError(""), 800);
-      return () => clearTimeout(timer);
+      return;
     }
-  }, [token, loading, navigate]);
-
-  useEffect(() => {
     if (token && loading) {
-      setSuccess("Login bem-sucedido! Você será redirecionado.");
       const timer = setTimeout(() => {
         setLoading(false);
         navigate("/");
-      }, 800)
+      }, 1000);
 
       return () => clearTimeout(timer);
     }
-  }, [token, navigate, loading]);
+  }, [token, navigate, loading, error]);
 
   return (
     <div

@@ -1,5 +1,6 @@
 export default function Home() {
 
+  
   return (
     <div style={{ display: "flex", fontFamily: "Poppins" }}>
       <main style={{ flex: 1, paddingLeft: "2rem" }}>
