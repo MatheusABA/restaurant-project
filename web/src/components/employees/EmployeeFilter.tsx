@@ -14,7 +14,7 @@ export default function EmployeeFilter({
   filterId,
   setFilterId,
   onClear,
-  onApply,
+  // onApply,
   UserRole,
 }: EmployeeFilterProps) {
   return (
@@ -54,7 +54,7 @@ export default function EmployeeFilter({
           }}
         />
       </label>
-      <button
+      {/* <button
         style={{
           background: "#18b862",
           color: "white",
@@ -68,7 +68,7 @@ export default function EmployeeFilter({
         onClick={onApply}
       >
         Aplicar Filtros
-      </button>
+      </button> */}
       <button
         style={{
           background: "#e0e7ef",

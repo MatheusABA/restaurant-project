@@ -2,7 +2,7 @@ package auth
 
 import (
 	"github.com/MatheusABA/restaurant-project/server/controller/auth/dto"
-	services "github.com/MatheusABA/restaurant-project/server/services/auth"
+	"github.com/MatheusABA/restaurant-project/server/services"
 	"github.com/MatheusABA/restaurant-project/server/utils"
 	"github.com/gin-gonic/gin"
 )

@@ -2,7 +2,7 @@ package user
 
 import (
 	"github.com/MatheusABA/restaurant-project/server/controller/user/dto"
-	"github.com/MatheusABA/restaurant-project/server/services/user"
+	"github.com/MatheusABA/restaurant-project/server/services"
 	"github.com/MatheusABA/restaurant-project/server/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -15,7 +15,7 @@ func ActivateUser(c *gin.Context) {
 		return
 	}
 
-	if err := user.ActivateUser(req.ID); err != nil {
+	if err := services.ActivateUser(req.ID); err != nil {
 		utils.Error(c, 400, err.Error())
 		return
 	}

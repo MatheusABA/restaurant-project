@@ -1,0 +1,46 @@
+package services
+
+import (
+	"github.com/MatheusABA/restaurant-project/server/controller/order/dto"
+	"github.com/MatheusABA/restaurant-project/server/model"
+	"github.com/MatheusABA/restaurant-project/server/repositories"
+)
+
+func CreateOrder(req dto.CreateOrderRequest) (*model.Order, error) {
+	orderModel := model.Order{
+		UserID:  req.UserID,
+		TableID: req.TableID,
+		Status:  "open",
+	}
+
+	for _, item := range req.Items {
+		orderModel.Items = append(orderModel.Items, model.OrderItem{
+			Name:     item.Name,
+			Price:    item.Price,
+			Quantity: item.Quantity,
+		})
+	}
+	return repositories.CreateOrder(&orderModel)
+}
+
+func GetAllOrders() ([]model.Order, error) {
+	return repositories.GetAllOrders()
+}
+
+func GetOrderById(id uint) (*model.Order, error) {
+	return repositories.GetOrderById(id)
+}
+
+func UpdateOrderStatus(req dto.CloseOrderRequest) error {
+	return repositories.UpdateOrderStatus(req.ID)
+}
+
+func AddOrderItem(req dto.AddOrderItemRequest) error {
+	orderItem := model.OrderItem{
+		OrderID:  req.ID,
+		Name:     req.Name,
+		Price:    req.Price,
+		Quantity: req.Quantity,
+	}
+	return repositories.AddOrderItem(orderItem)
+}

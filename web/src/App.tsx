@@ -6,6 +6,8 @@ import { useContext, type JSX } from "react";
 import { AuthProvider } from "./context/AuthProvider";
 import Employees from "./pages/Employees";
 import ProtectedLayout from "./components/ui/ProtectedLayout";
+import OrderPage from "./pages/Order";
+import Dashboard from "./pages/Dashboard";
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const { token } = useContext(AuthContext);
@@ -17,7 +19,9 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+
           <Route path="/login" element={<Login />} />
+
           <Route
             path="/"
             element={
@@ -26,6 +30,7 @@ export default function App() {
               </PrivateRoute>
             }
           />
+
           <Route
             path="/employees"
             element={
@@ -34,6 +39,25 @@ export default function App() {
               </PrivateRoute>
             }
           />
+
+          <Route
+            path="/orders"
+            element={
+              <PrivateRoute>
+                <OrderPage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+
         </Routes>
       </AuthProvider>
     </BrowserRouter>

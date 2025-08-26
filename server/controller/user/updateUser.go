@@ -2,7 +2,7 @@ package user
 
 import (
 	"github.com/MatheusABA/restaurant-project/server/controller/user/dto"
-	"github.com/MatheusABA/restaurant-project/server/services/user"
+	"github.com/MatheusABA/restaurant-project/server/services"
 	"github.com/MatheusABA/restaurant-project/server/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -19,7 +19,7 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	if err := user.UpdateUser(req); err != nil {
+	if err := services.UpdateUser(req); err != nil {
 		utils.Error(c, 400, err.Error())
 		return
 	}

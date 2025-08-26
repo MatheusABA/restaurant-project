@@ -2,7 +2,7 @@ package user
 
 import (
 	"github.com/MatheusABA/restaurant-project/server/controller/user/dto"
-	"github.com/MatheusABA/restaurant-project/server/services/user"
+	"github.com/MatheusABA/restaurant-project/server/services"
 	"github.com/MatheusABA/restaurant-project/server/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -15,7 +15,7 @@ func FindUserById(c *gin.Context) {
 		return
 	}
 
-	user, err := user.FindUserById(userRequest.ID)
+	user, err := services.FindUserById(userRequest.ID)
 	if err != nil || user == nil {
 		utils.Error(c, 404, "User not found")
 		return
@@ -33,7 +33,7 @@ func FindUserByEmail(c *gin.Context) {
 		return
 	}
 
-	user, err := user.FindUserByEmail(userRequest.Email)
+	user, err := services.FindUserByEmail(userRequest.Email)
 	if err != nil || user == nil {
 		utils.Error(c, 404, "User not found")
 		return
@@ -43,7 +43,7 @@ func FindUserByEmail(c *gin.Context) {
 }
 
 func FindAllUsers(c *gin.Context) {
-	users, err := user.FindAllUsers()
+	users, err := services.FindAllUsers()
 	if err != nil {
 		utils.Error(c, 500, "Error while searching users")
 		return
@@ -52,7 +52,7 @@ func FindAllUsers(c *gin.Context) {
 }
 
 func FindArchivedUsers(c *gin.Context) {
-	users, err := user.FindArchivedUsers()
+	users, err := services.FindArchivedUsers()
 	if err != nil {
 		utils.Error(c, 500, "Error while searching archived users")
 		return

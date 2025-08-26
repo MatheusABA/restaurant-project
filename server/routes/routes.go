@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/MatheusABA/restaurant-project/server/controller/auth"
 	"github.com/MatheusABA/restaurant-project/server/controller/order"
+	table "github.com/MatheusABA/restaurant-project/server/controller/tables"
 	"github.com/MatheusABA/restaurant-project/server/controller/user"
 	middleware "github.com/MatheusABA/restaurant-project/server/middlewares"
 	"github.com/gin-gonic/gin"
@@ -135,6 +136,35 @@ func InitRoutes(r *gin.RouterGroup) {
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			order.GetAllOrders,
+		)
+
+		orderGroup.PATCH(
+			"/updateOrderStatus/:id",
+			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			middleware.RequireAdmin(),
+			order.UpdateOrderStatus,
+		)
+
+		orderGroup.POST(
+			"/addOrderItem/:id",
+			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			order.AddOrderItem,
+		)
+	}
+
+	tableGroup := r.Group("/table")
+	{
+		tableGroup.GET(
+			"/getAllTables",
+			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			middleware.RequireAdmin(),
+			table.GetAllTables,
 		)
 	}
 }

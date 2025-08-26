@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { Assessment, Groups2Sharp, HomeFilled, Logout, Person } from "@mui/icons-material";
-import { TbArrowBigLeftLineFilled, TbArrowBigRightLineFilled, TbMenuOrder, } from "react-icons/tb";
+import { Groups2Sharp, HomeFilled, Logout, NoteAlt, Person, RequestPage } from "@mui/icons-material";
+import { TbArrowBigLeftLineFilled, TbArrowBigRightLineFilled } from "react-icons/tb";
 import { Link, useLocation } from "react-router-dom";
 
 interface SidebarProps {
@@ -211,14 +211,14 @@ export default function Sidebar({ children }: SidebarProps) {
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: isActive("/reports") ? "center" : open ? "flex-start" : "center",
+                  justifyContent: isActive("/orders") ? "center" : open ? "flex-start" : "center",
                   height: "40px",
-                  background: isActive("/reports") ? "#fff" : "transparent",
-                  color: isActive("/reports") ? "#2d3a4a" : "#fff",
+                  background: isActive("/orders") ? "#fff" : "transparent",
+                  color: isActive("/orders") ? "#2d3a4a" : "#fff",
                   borderRadius: "8px",
                   transition: "background 0.2s, color 0.2s",
-                  textAlign: isActive("/reports") ? "center" : "left",
-                  padding: isActive("/reports") ? "0 1rem" : "0",
+                  textAlign: isActive("/orders") ? "center" : "left",
+                  padding: isActive("/orders") ? "0 1rem" : "0",
                 }}
                 onMouseEnter={e => {
                   (e.currentTarget as HTMLLIElement).style.background = "#fff";
@@ -228,7 +228,7 @@ export default function Sidebar({ children }: SidebarProps) {
                   (e.currentTarget as HTMLLIElement).style.padding = "0 1rem";
                 }}
                 onMouseLeave={e => {
-                  if (!isActive("/reports")) {
+                  if (!isActive("/orders")) {
                     (e.currentTarget as HTMLLIElement).style.background = "transparent";
                     (e.currentTarget as HTMLLIElement).style.color = "#fff";
                     (e.currentTarget as HTMLLIElement).style.justifyContent = open ? "flex-start" : "center";
@@ -238,7 +238,7 @@ export default function Sidebar({ children }: SidebarProps) {
                 }}
               >
                 <Link
-                  to="/"
+                  to="/orders"
                   style={{
                     color: "inherit",
                     textDecoration: "none",
@@ -249,7 +249,7 @@ export default function Sidebar({ children }: SidebarProps) {
                     justifyContent: open ? "flex-start" : "center",
                   }}
                 >
-                  {open ? "Pedidos" : <TbMenuOrder />}
+                  {open ? "Pedidos" : <NoteAlt />}
                 </Link>
               </li>
               <li
@@ -261,14 +261,14 @@ export default function Sidebar({ children }: SidebarProps) {
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: isActive("/reports") ? "center" : open ? "flex-start" : "center",
+                  justifyContent: isActive("/dashboard") ? "center" : open ? "flex-start" : "center",
                   height: "40px",
-                  background: isActive("/reports") ? "#fff" : "transparent",
-                  color: isActive("/reports") ? "#2d3a4a" : "#fff",
+                  background: isActive("/dashboard") ? "#fff" : "transparent",
+                  color: isActive("/dashboard") ? "#2d3a4a" : "#fff",
                   borderRadius: "8px",
                   transition: "background 0.2s, color 0.2s",
-                  textAlign: isActive("/reports") ? "center" : "left",
-                  padding: isActive("/reports") ? "0 1rem" : "0",
+                  textAlign: isActive("/dashboard") ? "center" : "left",
+                  padding: isActive("/dashboard") ? "0 1rem" : "0",
                 }}
                 onMouseEnter={e => {
                   (e.currentTarget as HTMLLIElement).style.background = "#fff";
@@ -278,7 +278,7 @@ export default function Sidebar({ children }: SidebarProps) {
                   (e.currentTarget as HTMLLIElement).style.padding = "0 1rem";
                 }}
                 onMouseLeave={e => {
-                  if (!isActive("/reports")) {
+                  if (!isActive("/dashboard")) {
                     (e.currentTarget as HTMLLIElement).style.background = "transparent";
                     (e.currentTarget as HTMLLIElement).style.color = "#fff";
                     (e.currentTarget as HTMLLIElement).style.justifyContent = open ? "flex-start" : "center";
@@ -288,7 +288,7 @@ export default function Sidebar({ children }: SidebarProps) {
                 }}
               >
                 <Link
-                  to="/"
+                  to="/dashboard"
                   style={{
                     color: "inherit",
                     textDecoration: "none",
@@ -299,7 +299,7 @@ export default function Sidebar({ children }: SidebarProps) {
                     justifyContent: open ? "flex-start" : "center",
                   }}
                 >
-                  {open ? "Relatórios" : <Assessment />}
+                  {open ? "Financeiro" : <RequestPage />}
                 </Link>
               </li>
             </ul>

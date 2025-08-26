@@ -6,6 +6,8 @@ import (
 
 type Order struct {
 	ID          uint        `gorm:"primaryKey" json:"id"`
+	TableID     uint        `json:"table_id"` // Mesa associada
+	Table       Table       `gorm:"foreignKey:TableID"`
 	UserID      uint        `json:"user_id"` // Funcionário responsável
 	User        User        `gorm:"foreignKey:UserID"`
 	Status      string      `json:"status"` // Status da ordem ("open", "completed")

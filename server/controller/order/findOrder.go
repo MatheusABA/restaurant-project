@@ -4,19 +4,20 @@ import (
 	"time"
 
 	"github.com/MatheusABA/restaurant-project/server/controller/order/dto"
-	"github.com/MatheusABA/restaurant-project/server/services/order"
+	"github.com/MatheusABA/restaurant-project/server/services"
 	"github.com/MatheusABA/restaurant-project/server/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func GetAllOrders(c *gin.Context) {
-	orders, err := order.GetAllOrders()
+	orders, err := services.GetAllOrders()
 	if err != nil {
 		utils.Error(c, 500, err.Error())
 		return
 	}
 
 	var resp []dto.OrderResponse
+
 	for _, o := range orders {
 		r := dto.OrderResponse{
 			ID:     o.ID,
@@ -26,6 +27,12 @@ func GetAllOrders(c *gin.Context) {
 				Name:  o.User.Name,
 				Email: o.User.Email,
 				Role:  o.User.Role,
+			},
+			TableID: o.TableID,
+			Table: dto.TableResponse{
+				ID:     o.Table.ID,
+				Number: o.Table.Number,
+				Status: o.Table.Status,
 			},
 			Status:    o.Status,
 			CreatedAt: o.CreatedAt.Format(time.RFC3339),
@@ -52,7 +59,7 @@ func GetOrderById(c *gin.Context) {
 		utils.Error(c, 400, "ID invalido")
 		return
 	}
-	orderModel, err := order.GetOrderById(req.ID)
+	orderModel, err := services.GetOrderById(req.ID)
 	if err != nil {
 		utils.Error(c, 404, "Comanda não encontrada")
 		return
