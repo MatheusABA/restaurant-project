@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { Groups2Sharp, HomeFilled, Logout, NoteAlt, Person, RequestPage } from "@mui/icons-material";
+import { DeliveryDining, Groups2Sharp, HomeFilled, Logout, MenuBook, NoteAlt, Person, RequestPage } from "@mui/icons-material";
 import { TbArrowBigLeftLineFilled, TbArrowBigRightLineFilled } from "react-icons/tb";
 import { Link, useLocation } from "react-router-dom";
 
@@ -202,6 +202,56 @@ export default function Sidebar({ children }: SidebarProps) {
                   {open ? "Funcionários" : <Groups2Sharp />}
                 </Link>
               </li>
+                           <li
+                style={{
+                  marginBottom: "1.5rem",
+                  fontWeight: 600,
+                  fontSize: "1.1rem",
+                  fontFamily: "Poppins",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: isActive("/menu") ? "center" : open ? "flex-start" : "center",
+                  height: "40px",
+                  background: isActive("/menu") ? "#fff" : "transparent",
+                  color: isActive("/menu") ? "#2d3a4a" : "#fff",
+                  borderRadius: "8px",
+                  transition: "background 0.2s, color 0.2s",
+                  textAlign: isActive("/menu") ? "center" : "left",
+                  padding: isActive("/menu") ? "0 1rem" : "0",
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLLIElement).style.background = "#fff";
+                  (e.currentTarget as HTMLLIElement).style.color = "#2d3a4a";
+                  (e.currentTarget as HTMLLIElement).style.justifyContent = "center";
+                  (e.currentTarget as HTMLLIElement).style.textAlign = "center";
+                  (e.currentTarget as HTMLLIElement).style.padding = "0 1rem";
+                }}
+                onMouseLeave={e => {
+                  if (!isActive("/menu")) {
+                    (e.currentTarget as HTMLLIElement).style.background = "transparent";
+                    (e.currentTarget as HTMLLIElement).style.color = "#fff";
+                    (e.currentTarget as HTMLLIElement).style.justifyContent = open ? "flex-start" : "center";
+                    (e.currentTarget as HTMLLIElement).style.textAlign = "left";
+                    (e.currentTarget as HTMLLIElement).style.padding = "0";
+                  }
+                }}
+              >
+                <Link
+                  to="/menu"
+                  style={{
+                    color: "inherit",
+                    textDecoration: "none",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    width: "100%",
+                    justifyContent: open ? "flex-start" : "center",
+                  }}
+                >
+                  {open ? "Cardápio" : <MenuBook />}
+                </Link>
+              </li>
               <li
                 style={{
                   marginBottom: "1.5rem",
@@ -250,6 +300,56 @@ export default function Sidebar({ children }: SidebarProps) {
                   }}
                 >
                   {open ? "Pedidos" : <NoteAlt />}
+                </Link>
+              </li>
+                            <li
+                style={{
+                  marginBottom: "1.5rem",
+                  fontWeight: 600,
+                  fontSize: "1.1rem",
+                  fontFamily: "Poppins",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: isActive("/delivery") ? "center" : open ? "flex-start" : "center",
+                  height: "40px",
+                  background: isActive("/delivery") ? "#fff" : "transparent",
+                  color: isActive("/delivery") ? "#2d3a4a" : "#fff",
+                  borderRadius: "8px",
+                  transition: "background 0.2s, color 0.2s",
+                  textAlign: isActive("/delivery") ? "center" : "left",
+                  padding: isActive("/delivery") ? "0 1rem" : "0",
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLLIElement).style.background = "#fff";
+                  (e.currentTarget as HTMLLIElement).style.color = "#2d3a4a";
+                  (e.currentTarget as HTMLLIElement).style.justifyContent = "center";
+                  (e.currentTarget as HTMLLIElement).style.textAlign = "center";
+                  (e.currentTarget as HTMLLIElement).style.padding = "0 1rem";
+                }}
+                onMouseLeave={e => {
+                  if (!isActive("/delivery")) {
+                    (e.currentTarget as HTMLLIElement).style.background = "transparent";
+                    (e.currentTarget as HTMLLIElement).style.color = "#fff";
+                    (e.currentTarget as HTMLLIElement).style.justifyContent = open ? "flex-start" : "center";
+                    (e.currentTarget as HTMLLIElement).style.textAlign = "left";
+                    (e.currentTarget as HTMLLIElement).style.padding = "0";
+                  }
+                }}
+              >
+                <Link
+                  to="/delivery"
+                  style={{
+                    color: "inherit",
+                    textDecoration: "none",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    width: "100%",
+                    justifyContent: open ? "flex-start" : "center",
+                  }}
+                >
+                  {open ? "Delivery" : <DeliveryDining />}
                 </Link>
               </li>
               <li

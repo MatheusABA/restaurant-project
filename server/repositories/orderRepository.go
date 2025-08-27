@@ -101,3 +101,12 @@ func DeleteOrder(id uint) error {
 		Where("id = ?", order.TableID).
 		Update("status", "disponivel").Error
 }
+
+func GetMenuItemByID(id uint) (*model.MenuItem, error) {
+	var item model.MenuItem
+	err := database.DB.First(&item, id).Error
+	if err != nil {
+		return nil, err
+	}
+	return &item, nil
+}

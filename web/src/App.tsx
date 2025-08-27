@@ -8,6 +8,8 @@ import Employees from "./pages/Employees";
 import ProtectedLayout from "./components/ui/ProtectedLayout";
 import OrderPage from "./pages/Order";
 import Dashboard from "./pages/Dashboard";
+import Delivery from "./pages/Delivery";
+import Menu from "./pages/Menu";
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const { token } = useContext(AuthContext);
@@ -40,11 +42,29 @@ export default function App() {
             }
           />
 
+        <Route
+            path="/menu"
+            element={
+              <PrivateRoute>
+                <Menu />
+              </PrivateRoute>
+            }
+          />
+
           <Route
             path="/orders"
             element={
               <PrivateRoute>
                 <OrderPage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/delivery"
+            element={
+              <PrivateRoute>
+                <Delivery />
               </PrivateRoute>
             }
           />

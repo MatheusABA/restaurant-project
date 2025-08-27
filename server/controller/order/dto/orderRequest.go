@@ -7,9 +7,8 @@ type CreateOrderRequest struct {
 }
 
 type OrderItemRequest struct {
-	Name     string `json:"name" binding:"required"`
-	Price    int    `json:"price" binding:"required"`
-	Quantity int    `json:"quantity" binding:"required"`
+	MenuItemID uint `json:"menu_item_id" binding:"required"`
+	Quantity   int  `json:"quantity" binding:"required"`
 }
 
 type CloseOrderRequest struct {

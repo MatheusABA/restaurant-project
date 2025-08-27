@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/MatheusABA/restaurant-project/server/controller/auth"
 	"github.com/MatheusABA/restaurant-project/server/controller/invoicing"
+	"github.com/MatheusABA/restaurant-project/server/controller/menu"
 	"github.com/MatheusABA/restaurant-project/server/controller/order"
 	"github.com/MatheusABA/restaurant-project/server/controller/tables"
 	"github.com/MatheusABA/restaurant-project/server/controller/user"
@@ -188,5 +189,18 @@ func InitRoutes(r *gin.RouterGroup) {
 			middleware.RequireAdmin(),
 			invoicing.GetAllInvoices,
 		)
+	}
+
+	menuItemGroup := r.Group("/menu")
+	{
+		menuItemGroup.POST(
+			"/createMenuItem",
+			middleware.RequestLogger(),
+			middleware.RateLimiter(),
+			middleware.AuthJWT(),
+			middleware.RequireAdmin(),
+			menu.CreateMenuItem,
+		)
+
 	}
 }

@@ -14,10 +14,16 @@ func CreateOrder(req dto.CreateOrderRequest) (*model.Order, error) {
 	}
 
 	for _, item := range req.Items {
+		// Busca o MenuItem pelo ID
+		menuItem, err := repositories.GetMenuItemByID(item.MenuItemID)
+		if err != nil {
+			return nil, err
+		}
 		orderModel.Items = append(orderModel.Items, model.OrderItem{
-			Name:     item.Name,
-			Price:    item.Price,
-			Quantity: item.Quantity,
+			MenuItemID: menuItem.ID,
+			Name:       menuItem.Name,
+			Price:      menuItem.Price,
+			Quantity:   item.Quantity,
 		})
 	}
 	return repositories.CreateOrder(&orderModel)

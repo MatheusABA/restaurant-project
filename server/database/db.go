@@ -29,6 +29,7 @@ func ConnectDatabase(config *config.Config) {
 		&model.User{},
 		&model.Order{},
 		&model.OrderItem{},
+		&model.MenuItem{},
 		&model.Table{},
 		&model.Invoicing{},
 	); err != nil {
