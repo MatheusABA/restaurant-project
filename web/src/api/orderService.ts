@@ -6,6 +6,11 @@ interface OrderItem {
   quantity: number
 }
 
+interface AddOrderItemRequest {
+  menu_item_id: number;
+  quantity: number;
+}
+
 class OrderService {
 
   async getAllOrders(token: string) {
@@ -41,7 +46,7 @@ class OrderService {
     return response.data;
   }
   
-  async addOrderItem(token: string, id: number, item: OrderItem) {
+  async addOrderItem(token: string, id: number, item: AddOrderItemRequest) {
     const response = await api.post(`/order/addOrderItem/${id}`,
       item,
       {

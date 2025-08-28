@@ -21,7 +21,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		userGroup.GET(
 			"/getUserById/:id",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterGet(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			user.FindUserById,
@@ -30,7 +30,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		userGroup.GET(
 			"/getUserByEmail/:email",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterGet(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			user.FindUserByEmail,
@@ -39,7 +39,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		userGroup.GET(
 			"/getAllUsers",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterGet(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			user.FindAllUsers,
@@ -48,7 +48,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		userGroup.GET(
 			"/getArchivedUsers",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterGet(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			user.FindArchivedUsers,
@@ -57,7 +57,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		userGroup.POST(
 			"/createUser",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterPost(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			user.CreateUser,
@@ -66,7 +66,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		userGroup.PATCH(
 			"/updateUser/:id",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterPost(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			user.UpdateUser,
@@ -75,7 +75,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		userGroup.PATCH(
 			"/deleteUser/:id",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterPost(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			user.DeleteUser,
@@ -84,7 +84,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		userGroup.PATCH(
 			"/activateUser/:id",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterPost(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			user.ActivateUser,
@@ -98,7 +98,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		authGroup.POST(
 			"/login",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterPost(),
 			auth.Login,
 		)
 
@@ -106,7 +106,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		authGroup.GET(
 			"/validate",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterGet(),
 			auth.ValidateToken,
 		)
 	}
@@ -117,7 +117,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		orderGroup.POST(
 			"/createOrder",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterPost(),
 			middleware.AuthJWT(),
 			order.CreateOrder,
 		)
@@ -125,7 +125,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		orderGroup.GET(
 			"/getOrderById/:id",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterGet(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			order.GetOrderById,
@@ -134,7 +134,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		orderGroup.GET(
 			"/getAllOrders",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterGet(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			order.GetAllOrders,
@@ -143,7 +143,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		orderGroup.PATCH(
 			"/updateOrderStatus/:id",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterPost(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			order.UpdateOrderStatus,
@@ -152,7 +152,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		orderGroup.POST(
 			"/addOrderItem/:id",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterPost(),
 			middleware.AuthJWT(),
 			order.AddOrderItem,
 		)
@@ -160,7 +160,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		orderGroup.PATCH(
 			"/deleteOrder/:id",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterPost(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			order.DeleteOrder,
@@ -172,7 +172,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		tableGroup.GET(
 			"/getAllTables",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterGet(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			tables.GetAllTables,
@@ -184,7 +184,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		invoiceGroup.GET(
 			"/getAllInvoices",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterGet(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			invoicing.GetAllInvoices,
@@ -196,11 +196,18 @@ func InitRoutes(r *gin.RouterGroup) {
 		menuItemGroup.POST(
 			"/createMenuItem",
 			middleware.RequestLogger(),
-			middleware.RateLimiter(),
+			middleware.RateLimiterPost(),
 			middleware.AuthJWT(),
 			middleware.RequireAdmin(),
 			menu.CreateMenuItem,
 		)
 
+		menuItemGroup.GET(
+			"/getAllMenuItems",
+			middleware.RequestLogger(),
+			middleware.RateLimiterGet(),
+			middleware.AuthJWT(),
+			menu.GetAllMenuItems,
+		)
 	}
 }

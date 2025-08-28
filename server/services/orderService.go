@@ -42,11 +42,17 @@ func UpdateOrderStatus(req dto.CloseOrderRequest) error {
 }
 
 func AddOrderItem(req dto.AddOrderItemRequest) error {
+	menuItem, err := repositories.GetMenuItemByID(req.MenuItemID)
+	if err != nil {
+		return err
+	}
+
 	orderItem := model.OrderItem{
-		OrderID:  req.ID,
-		Name:     req.Name,
-		Price:    req.Price,
-		Quantity: req.Quantity,
+		OrderID:    req.ID,
+		MenuItemID: menuItem.ID,
+		Name:       menuItem.Name,
+		Price:      menuItem.Price,
+		Quantity:   req.Quantity,
 	}
 	return repositories.AddOrderItem(orderItem)
 }

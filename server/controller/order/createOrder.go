@@ -83,7 +83,7 @@ func AddOrderItem(c *gin.Context) {
 	var req dto.AddOrderItemRequest
 
 	if err := c.ShouldBindUri(&req); err != nil {
-		utils.Logger.Error("Invalid order ID")
+		utils.Logger.Error("Invalid order ID", err)
 		utils.Error(c, 400, "Invalid order ID")
 		return
 	}

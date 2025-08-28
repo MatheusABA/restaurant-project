@@ -20,10 +20,9 @@ type GetOrderByIdRequest struct {
 }
 
 type AddOrderItemRequest struct {
-	ID       uint   `uri:"id" binding:"required"`
-	Name     string `json:"name" `
-	Price    int    `json:"price" `
-	Quantity int    `json:"quantity"`
+	ID         uint `uri:"id" binding:"required"`
+	MenuItemID uint `json:"menu_item_id"`
+	Quantity   int  `json:"quantity"`
 }
 
 type DeleteOrderRequest struct {

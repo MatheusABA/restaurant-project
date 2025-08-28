@@ -11,3 +11,9 @@ func CreateMenuItem(item *model.MenuItem) (*model.MenuItem, error) {
 	}
 	return item, nil
 }
+
+func GetAllMenuItems() ([]model.MenuItem, error) {
+	var items []model.MenuItem
+	err := database.DB.Order("name ASC").Find(&items).Error
+	return items, err
+}

@@ -15,3 +15,7 @@ func CreateMenuItem(req dto.CreateMenuItemRequest) (*model.MenuItem, error) {
 	}
 	return repositories.CreateMenuItem(&item)
 }
+
+func GetAllMenuItems() ([]model.MenuItem, error) {
+	return repositories.GetAllMenuItems()
+}

@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import orderService from "../../api/orderService";
 import { AuthContext } from "../../context/AuthContext";
 import { FaTrash } from "react-icons/fa"; // Instale react-icons se não tiver
+import menuService from "../../api/menuService";
 
 interface User {
   id: number;
@@ -13,6 +14,7 @@ interface User {
 interface OrderItem {
   id: number;
   order_id: number;
+  menu_item_id: number;
   name: string;
   price: number;
   quantity: number;
@@ -34,6 +36,14 @@ interface Order {
   created_at: string;
   updated_at: string;
   items: OrderItem[];
+}
+
+interface MenuItem {
+  id?: string;
+  name: string;
+  category: string
+  price: number;
+  is_active: boolean;
 }
 
 interface Props {
@@ -59,11 +69,18 @@ const getStatusLabel = (status: string) => {
 
 const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
   const [showModal, setShowModal] = useState(false);
-  const [itemName, setItemName] = useState("");
-  const [itemPrice, setItemPrice] = useState<number>(0);
   const [itemQuantity, setItemQuantity] = useState<number>(1);
   const [loading, setLoading] = useState(false);
   const { token } = useContext(AuthContext);
+
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [selectedMenuItemId, setSelectedMenuItemId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (showModal) {
+      menuService.getAllMenuItems(token).then(setMenuItems);
+    }
+  }, [showModal, token]);
 
   const handleCloseOrder = async () => {
     if (!order.items) {
@@ -84,18 +101,19 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
 
   const handleAddItem = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (selectedMenuItemId === null) {
+      alert("Selecione um produto!");
+      return;
+    }
     setLoading(true);
     try {
-      const priceInCents = Math.round(Number(itemPrice) * 100);
       await orderService.addOrderItem(token, order.id, {
-        name: itemName,
-        price: priceInCents,
+        menu_item_id: selectedMenuItemId,
         quantity: itemQuantity,
       });
       alert("Item adicionado!");
       setShowModal(false);
-      setItemName("");
-      setItemPrice(0);
+      setSelectedMenuItemId(null);
       setItemQuantity(1);
       if (onRefresh) onRefresh();
     } catch {
@@ -245,7 +263,7 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
               background: "#fff",
               padding: 24,
               borderRadius: 8,
-              minWidth: 300,
+              minWidth: 340,
               boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
             }}
           >
@@ -256,78 +274,39 @@ const OrderCard: React.FC<Props> = ({ order, onRefresh }) => {
                 marginBottom: 16,
               }}
             >
-              Adicionar item
+              Adicionar Item
             </h3>
             <form onSubmit={handleAddItem}>
-              <div style={{ marginBottom: 12 }}>
-                <label
-                  style={{
-                    fontFamily: "Poppins",
-                    fontSize: 12,
-                    display: "block",
-                    marginBottom: 4,
-                  }}
-                >
-                  Nome do item
-                </label>
-                <input
-                  type="text"
-                  placeholder="Ex: Peixe"
-                  value={itemName}
-                  onChange={(e) => setItemName(e.target.value)}
-                  required
-                  style={{
-                    width: "80%",
-                    padding: 8,
-                    marginBottom: 8,
-                    fontFamily: "Poppins",
-                    fontSize: 12,
-                  }}
-                />
-                <label
-                  style={{
-                    fontFamily: "Poppins",
-                    fontSize: 12,
-                    display: "block",
-                    marginBottom: 4,
-                  }}
-                >
-                  Preço
-                </label>
-                <input
-                  type="number"
-                  step="0.10"
-                  placeholder="Ex: 12"
-                  value={itemPrice}
-                  onChange={(e) => setItemPrice(Number(e.target.value))}
-                  required
-                  style={{
-                    width: "80%",
-                    padding: 8,
-                    marginBottom: 8,
-                  }}
-                />
-                <label
-                  style={{
-                    fontFamily: "Poppins",
-                    fontSize: 12,
-                    display: "block",
-                    marginBottom: 4,
-                  }}
-                >
-                  Quantidade
-                </label>
-                <input
-                  type="number"
-                  placeholder="Ex: 1"
-                  value={itemQuantity}
-                  min={1}
-                  onChange={(e) => setItemQuantity(Number(e.target.value))}
-                  required
-                  style={{ width: "80%", padding: 8 }}
-                />
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <label style={{ minWidth: 80 }}>Produto</label>
+                  <select
+                    value={selectedMenuItemId ?? ""}
+                    onChange={e => setSelectedMenuItemId(Number(e.target.value))}
+                    required
+                    style={{ flex: 1, padding: 8 }}
+                  >
+                    <option value="">Selecione um produto</option>
+                    {menuItems.map(item => (
+                      <option key={item.id} value={item.id}>
+                        {item.name} - R$ {(item.price / 100).toFixed(2)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <label style={{ minWidth: 80 }}>Quantidade</label>
+                  <input
+                    type="number"
+                    value={itemQuantity}
+                    min={1}
+                    onChange={e => setItemQuantity(Number(e.target.value))}
+                    required
+                    style={{ flex: 1, padding: 8 }}
+                  />
+                </div>
               </div>
-              <div style={{ display: "flex", gap: 8 }}>
+              <div style={{ display: "flex", gap: 8, marginTop: 18 }}>
                 <button
                   type="submit"
                   disabled={loading}

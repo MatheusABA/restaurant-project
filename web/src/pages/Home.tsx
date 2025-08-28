@@ -3,6 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import OpenOrdersCard from "../components/home/OpenOrdersCard";
 import FinishedOrdersCard from "../components/home/FinishedOrdersCard";
 import InvoiceCard from "../components/home/InvoiceCard";
+import TotalProductsCard from "../components/home/TotalProductsCard";
 
 export default function Home() {
 
@@ -20,6 +21,7 @@ export default function Home() {
         <div style={{ display: "flex", gap: "2rem", marginTop: "2rem" }}>
           <OpenOrdersCard />
           <FinishedOrdersCard />
+          <TotalProductsCard />
         </div>
       </main>
     </div>

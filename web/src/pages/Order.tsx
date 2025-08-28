@@ -13,6 +13,7 @@ interface User {
 interface OrderItem {
   id: number;
   order_id: number;
+  menu_item_id: number;
   name: string;
   price: number;
   quantity: number;
@@ -160,7 +161,7 @@ export default function OrderPage() {
               Selecionar mesa
             </h3>
             <select
-              style={{ width: "100%", padding: 8, marginBottom: 16 }}
+              style={{ width: "100%", padding: 8, marginBottom: 16, fontFamily: 'Poppins'}}
               value={selectedTableId !== null ? String(selectedTableId) : ""}
               onChange={e => setSelectedTableId(Number(e.target.value))}
             >

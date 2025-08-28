@@ -1,6 +1,15 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import menuService from "../api/menuService";
 import { AuthContext } from "../context/AuthContext";
+import MenuItemCard from "../components/menu/MenuItemCard";
+
+interface MenuItem {
+  id?: string;
+  name: string;
+  category: string
+  price: number;
+  is_active: boolean;
+}
 
 export default function Menu() {
   const { token } = useContext(AuthContext);
@@ -12,6 +21,19 @@ export default function Menu() {
     is_active: true,
   });
   const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState<MenuItem[]>([]);
+
+  useEffect(() => {
+    async function fetchItems() {
+      try {
+        const data = await menuService.getAllMenuItems(token);
+        setItems(data);
+      } catch {
+        setItems([]);
+      }
+    }
+    fetchItems();
+  }, [token, showModal]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -54,6 +76,7 @@ export default function Menu() {
       >
         Adicionar produto
       </button>
+
       {showModal && (
         <div style={{
           position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
@@ -67,34 +90,40 @@ export default function Menu() {
           >
             <h3 style={{ fontFamily: "Poppins", fontSize: 20, marginBottom: 20 }}>Novo produto</h3>
             <div style={{ marginBottom: 16 }}>
-              <label>Nome:</label>
+              <label style={{
+                fontFamily: 'Poppins',
+              }}>Nome:</label>
               <input
                 name="name"
                 value={form.name}
                 onChange={handleChange}
                 required
-                style={{ width: "100%", padding: 8, borderRadius: 4, border: "1px solid #ccc" }}
+                style={{ width: "100%", padding: 8, borderRadius: 4, border: "1px solid #ccc", fontFamily: 'Poppins' }}
               />
             </div>
             <div style={{ marginBottom: 16 }}>
-              <label>Preço:</label>
+              <label style={{
+                fontFamily: 'Poppins',
+              }}>Preço:</label>
               <input
                 name="price"
                 type="number"
                 value={form.price}
                 onChange={handleChange}
                 required
-                style={{ width: "100%", padding: 8, borderRadius: 4, border: "1px solid #ccc" }}
+                style={{ width: "100%", padding: 8, borderRadius: 4, border: "1px solid #ccc", fontFamily: 'Poppins' }}
               />
             </div>
             <div style={{ marginBottom: 16 }}>
-              <label>Categoria:</label>
+              <label style={{
+                fontFamily: 'Poppins',
+              }}>Categoria:</label>
               <input
                 name="category"
                 value={form.category}
                 onChange={handleChange}
                 required
-                style={{ width: "100%", padding: 8, borderRadius: 4, border: "1px solid #ccc" }}
+                style={{ width: "100%", padding: 8, borderRadius: 4, border: "1px solid #ccc", fontFamily: 'Poppins' }}
               />
             </div>
             {/* <div style={{ marginBottom: 16 }}>
@@ -146,6 +175,14 @@ export default function Menu() {
           </form>
         </div>
       )}
+
+      <div style={{ display: "flex", flexWrap: "wrap", marginTop: 24 }}>
+        {items.length === 0 ? (
+          <span style={{ color: "#888", fontFamily: "Poppins", fontSize: 16 }}>Nenhum produto cadastrado.</span>
+        ) : (
+          items.map(item => <MenuItemCard key={item.id} item={item} />)
+        )}
+      </div>
     </div>
   );
 }

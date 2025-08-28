@@ -18,6 +18,18 @@ class MenuService {
     });
     return response.data;
   }
+
+  async getAllMenuItems(token: string) {
+    const response = await api.get('/menu/getAllMenuItems', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    return response.data;
+  }
+
+
+
 }
 
 export default new MenuService();
